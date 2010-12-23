@@ -10,6 +10,5 @@
 [X] make design
 [X] add css
 [X] make ruleset
+[ ] port to chrome
 
-
- safari-extension://net.acko.wikitldr-SCYWYCWWTN/cebfd012/map.html#Brasilia
