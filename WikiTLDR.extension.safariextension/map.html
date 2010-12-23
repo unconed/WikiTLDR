@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html style="height: 100%; padding: 0; margin: 0">
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Google Maps JavaScript API v3</title>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+  var geocoder;
+  var map;
+  function initialize() {
+    geocoder = new google.maps.Geocoder();
+    var latlng = new google.maps.LatLng(0, 0);
+    var myOptions = {
+      zoom: 3,
+      center: latlng,
+      disableDefaultUI: true,
+      navigationControl: true,
+      mapTypeControl: false,
+      scaleControl: true,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+    codeAddress();
+  }
+
+  function codeAddress() {
+    var address = unescape(location.hash).substring(1);
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        map.setCenter(results[0].geometry.location);
+        var marker = new google.maps.Marker({
+            map: map, 
+            position: results[0].geometry.location
+        });
+      } else {
+        var c = document.getElementByID('map_canvas');
+        c.innerHTML = '';
+        c.background = '#ccc';
+      }
+    });
+  }
+</script>
+</head>
+<body style="height: 100%; padding: 0; margin: 0" onload="initialize()">
+<div id="map_canvas" style="height:100%"></div>
+</body>
+</html>

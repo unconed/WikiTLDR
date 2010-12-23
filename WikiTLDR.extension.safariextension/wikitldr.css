@@ -1,0 +1,137 @@
+/* CSS reset re: wikileaks */
+#wikitldr h1, #wikitldr h2, #wikitldr span {
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  float: none;
+}
+
+/* Global typography */
+#wikitldr {
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  padding: 3em 0 1em;
+  line-height: 28px;
+  font-size: 16px;
+}
+
+#wikitldr #note {
+  background: #ffb;
+  padding: 0.75em;
+  margin: 1.5em 0;
+}
+
+/* Header */
+
+/* 3 info boxes */
+#wikitldr #header hgroup h2 {
+  width: 130px;
+  padding: 10px;
+  float: left;
+  color: #fff;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, .4);
+  background: #A0A0A0;
+}
+
+#wikitldr #header hgroup h2 a, #wikitldr #header hgroup h2 span {
+  color: #fff;
+}
+
+#wikitldr #header hgroup h2.time {
+}
+
+#wikitldr #header hgroup h2.time span {
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+#wikitldr #header hgroup h2.time span.year {
+  float: left;
+  font-size: 32px;
+  line-height: 28px;
+}
+
+#wikitldr #header hgroup h2.time span.monthday, #wikitldr #header hgroup h2.time span.time {
+  float: right;
+  clear: right;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+#wikitldr #header hgroup h2.time span.time {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 12px;
+  color: #ddd;
+}
+
+#wikitldr #header hgroup h2.classification, #wikitldr #header hgroup h2.reference {
+  width: 150px;
+  display: table;
+  height: 28px;
+}
+
+#wikitldr #header hgroup h2.classification {
+  background: #B0B0B0;
+  text-transform: uppercase;
+}
+#wikitldr #header hgroup h2.classification.confidential {
+  background: #FA3;
+}
+#wikitldr #header hgroup h2.classification.secret {
+  background: #D13;
+}
+
+#wikitldr #header hgroup h2.reference {
+  background: #C0C0C0;
+}
+
+#wikitldr #header hgroup h2.classification span, #wikitldr #header hgroup h2.reference span {
+  display: table-cell;
+  height: 28px;
+  vertical-align: middle;
+  line-height: 13px;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Sidebar with map */
+#wikitldr #header aside {
+  float: right;
+  width: 300px;
+}
+
+#wikitldr #header aside iframe {
+  height: 200px;
+}
+
+/* Actual metadata */
+#wikitldr #header section {
+  clear: left;
+  padding: 1.75em 0;
+}
+
+#wikitldr #header section dl {
+  margin: 0;
+  padding: 0;
+}
+
+#wikitldr #header section dt {
+  float: left;
+  width: 70px;
+  text-align: right;
+}
+
+#wikitldr #header section dd {
+  margin-left: 90px;
+}
+
+#wikitldr #header h1 {
+
+  font-family: "Helvetica Neue", "Helvatica", "Arial", sans-serif;
+  font-size: 1.75em;
+  line-height: 1;
+  letter-spacing: -1pt;
+  margin-top: 1.166em;
+}
+
+/* Body */

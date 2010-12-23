@@ -1,0 +1,15 @@
+[X] make extension
+[X] make content modification on cable
+[X] get list of acronyms
+[X] think of 5 improvements
+ [X] acronym expansion
+ [X] parse out classification, subject, tags, refs
+ [.] reformat text into flowed, parse out headlines, titlecase
+ [X] maps for origin
+ [ ] classification color by section
+[X] make design
+[.] make ruleset
+[ ] add css
+
+
+ safari-extension://net.acko.wikitldr-SCYWYCWWTN/cebfd012/map.html#Brasilia
