@@ -129,7 +129,7 @@
   float: right;
   width: 300px;
   font-size: 14px;
-  color: rgba(0,0,0,.6);
+  color: #555;
   overflow: visible;
 }
 
@@ -151,23 +151,23 @@
   display: block;
 }
 
-#wikitldr #header aside dl {
+#wikitldr #header aside section dl {
   margin: 0;
   padding: 0;
 }
 
-#wikitldr #header aside dt {
+#wikitldr #header aside section dt {
   float: left;
-  width: 90px;
+  width: 80px;
   text-align: right;
 }
 
-#wikitldr #header aside dd {
-  margin-left: 110px;
+#wikitldr #header aside section dd {
+  margin-left: 100px;
   margin-right: 10px;
 }
 
-#wikitldr #header aside dd span {
+#wikitldr #header aside section dd span {
   font-weight: normal;
   font-size: 12px;
   white-space: nowrap;
@@ -176,8 +176,8 @@
 /* Summary info */
 #wikitldr #header > section {
   clear: left;
-  padding: 1.75em 0;
-  width: 440px;
+  padding: 1.75em 0 0 10px;
+  width: 430px;
 }
 
 #wikitldr #header section dl {
@@ -187,13 +187,16 @@
 
 #wikitldr #header section dt {
   float: left;
-  width: 70px;
+  width: 80px;
+  width: 50px;
   text-align: right;
   color: rgba(0, 0, 0, .5);
 }
 
 #wikitldr #header section dd {
-  margin-left: 90px;
+  margin-left: 100px;
+  margin-left: 70px;
+  color: #555;
 }
 
 /* Tags */
@@ -220,8 +223,18 @@
   letter-spacing: -1pt;
   margin-bottom: 1.166em;
   text-align: center;
+  text-align: left;
 }
 
 /* Body */
 #wikitldr #body {
+  padding: 0 10px;
+}
+
+#wikitldr #body h2 {
+  margin: 3em 0 1.5em;
+}
+#wikitldr #body p {
+  margin: 1.5em 0;
+  text-indent: 0;
 }

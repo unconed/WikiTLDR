@@ -104,8 +104,9 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     // Output template.
     $('table.cable').before(pageTemplate);
 
-    // Insert body text.
-    $('#wikitldr #body').html($body.parent().html());
+    // Process body text.
+    var body = processBody($body);
+    $('#wikitldr #body').html(body);
 
     // Hide empty elements.
     if (!metadata.note) {
@@ -262,8 +263,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     // Matching rules for identifying data.
     var rules = [
 //      [ /^[A-Z]+: (((?!\s+\n)[^\n]+\n)+)/m, { 1: 'title' } ],
-      [ /^SUBJECT: (((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]+\n)+)/m, { 1: 'title' } ],
-      [ /^TAGS:? (((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]+\n)+)/m, { 1: 'tags' } ],
+      [ /^SUBJECT: ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{50,}\n)*([^\n]+\n))/m, { 1: 'title' } ],
+      [ /^TAGS:? ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{50,}\n)*([^\n]+\n))/m, { 1: 'tags' } ],
     ];
     
     // Apply matching rules to body text.
@@ -285,7 +286,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
   }
   
   /**
-   * Apply regexp rules to lines of text.
+   * Apply regexp matching rules to lines of text.
    */
   function applyRules(text, rules, metadata) {
     // Apply regexps.
@@ -307,7 +308,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     // Process words.
     var words = text.replace(/\n/g, ' ').split(/ /);
     for (i = words.length - 1; i >= 0; i--) {
-      words[i] = words[i].replace(/((^|-)["'’.,()]*)([A-Z"'’.,():]+)((?=-)|$)/g, function (m, pre, n, text) { return pre + text.substring(0,1) + text.substring(1).toLowerCase(); });
+      words[i] = words[i].replace(/((^|-)["'‘’“”.,;?()]*)([A-Z"'‘’“”.,;():]+)((?=-)|$)/g, function (m, pre, n, text) { return pre + text.substring(0,1) + text.substring(1).toLowerCase(); });
     }
     text = words.join(' ');
     
@@ -348,5 +349,33 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       obj[i] = obj[i].replace(regexp, callback);
     }
   }
+  
+  /**
+   * Process body text.
+   */
+  function processBody($element) {
+    
+    var text = $element.html();
+
+    var rules = [
+      [ /^SUBJECT: ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{50,}\n)*([^\n]+\n))/m, '' ],
+      [ /^TAGS:? ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{50,}\n)*([^\n]+\n))/m, '' ],
+      [ /^(C O N F I D E N T I A L|S E C R E T)( SECTION [0-9]+ OF [0-9]+)? [A-Z]+ [0-9]+\s*$/m, '' ],
+      [ /^SIPDIS\s*$/mg, '' ],
+      [ new RegExp('^([A-Za-z\"\'‘’“”.,;?(): --]+)\n[ -]{4,} *\n', 'mg'), function (m, title) { return '<h2>'+ title + '</h2>\n'; } ],
+      [ /^\n+/, '' ],
+      [ new RegExp('^<a id="par[^>]*>¶<\/a>([^\n]+|\n(?!<)(?!\s*\n))+', 'mg'), function (m) { return '<p>' + m + '</p>'; } ],
+    ];
+    
+    for (i in rules) {
+      var regexp = rules[i][0]
+        , replace = rules[i][1];
+        text = text.replace(regexp, replace);
+    }
+    console.log(text);
+    
+    return text;
+  }
+  
   
 }
