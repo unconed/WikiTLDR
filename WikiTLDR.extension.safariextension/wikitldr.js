@@ -50,7 +50,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
   link.setAttribute('rel', 'stylesheet');
   link.setAttribute('href', safari.extension.baseURI + 'wikitldr.css');
   document.getElementsByTagName('head')[0].appendChild(link);
-  
+
   // Manipulate content on ready.
   $(function () {
     
@@ -410,6 +410,11 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     
     return text;
   }
-  
+    
+  // Inject analytics to track extension usage.
+  var script = document.createElement('script');
+  script.setAttribute('type', 'text/javascript');
+  script.setAttribute('src', safari.extension.baseURI + 'analytics.js');
+  document.getElementsByTagName('head')[0].appendChild(script);
   
 }
