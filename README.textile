@@ -3,5 +3,6 @@
 Text is reflowed, abbreviations are expanded, maps are added and the entire page is skinned. Security clearance requirements are indicated with background colors per paragraph. Message priority is indicated next to each recipient.
 
 Download the "beta for Safari 5+":https://github.com/unconed/WikiTLDR/blob/master/WikiTLDR.extension.safariextz.zip
+Chrome version coming soon.
 
 !https://github.com/unconed/WikiTLDR/raw/master/wikitldr.png!
