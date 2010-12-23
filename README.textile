@@ -1,7 +1,7 @@
 *Wiki TL;DR* is an extension for Safari / Chrome which reformats WikiLeaks' cablegate documents for optimal reading.
 
+Text is reflowed, abbreviations are expanded, maps are added and the entire page is skinned. Security clearance requirements are indicated with background colors per paragraph.
+
 Download the "beta for Safari 4+":https://github.com/unconed/WikiTLDR/blob/master/WikiTLDR.extension.safariextz.zip
 
 !https://github.com/unconed/WikiTLDR/raw/master/wikitldr.png!
-
-Text is reflowed, abbreviations are expanded, maps are added and the entire page is skinned. Security clearance requirements are indicated with background colors per paragraph.
