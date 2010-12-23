@@ -227,7 +227,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       [ /^([A-Z0-9]{12})$/m, { 1: 'id' } ],
       [ /^FM (.+)/m, { 1: 'from' } ],
       [ /^TO (.+)/m, { 1: 'to' } ],
-      [ /^This record.+$/, { 0: 'note' } ],
+      [ /^This record.+$/m, { 0: 'note' } ],
       [ /^INFO (([^\n\/]+\/[^\n]+(\n|$))+)/m, { 1: 'routed' } ],
     ];
 
@@ -242,8 +242,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
         // Remove extension-like numbers.
         metadata[i] = metadata[i]
           .replace(/(^\b)[A-Z0-9]+\/(?=[A-Z])/mg, '')
-          .replace(/( (PRIORITY))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' <span class="priority" title="Priority">( ! )</span>' : '' })
-          .replace(/( (IMMEDIATE))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' <span class="immediate" title="Immediate">( ‼ )</span>' : '' });
+          .replace(/( (PRIORITY))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' <span class="priority" title="Priority">•</span>' : '' })
+          .replace(/( (IMMEDIATE))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' <span class="immediate" title="Immediate">••</span>' : '' });
 
         // Wrap recipients in spans.  
         metadata[i] = '<span>'+ metadata[i].split(/\n/).join('</span> <span>') +'</span>';
