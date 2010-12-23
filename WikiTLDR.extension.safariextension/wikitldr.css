@@ -34,7 +34,7 @@
 }
 
 #wikitldr #header span.priority {
-  color: #fc0;
+  color: #ea0;
 }
 
 /* 3 info boxes */
@@ -126,13 +126,18 @@
 
 /* Sidebar with map / metadata */
 #wikitldr #header aside {
-  position: absolute;
-  left: 450px;
-  top: 0px;
-  min-width: 300px;
+  float: right;
+  width: 300px;
   font-size: 14px;
-  background: #eee -webkit-gradient(linear, 0% 50%, 0% 100%, from(#ddd), to(#fff));
   color: rgba(0,0,0,.6);
+  overflow: visible;
+}
+
+#wikitldr #header aside section {
+  float: left;
+  width: auto;
+  min-width: 300px;
+  background: #eee -webkit-gradient(linear, 0% 50%, 0% 100%, from(#ddd), to(#fff));
 }
 
 #wikitldr #header aside iframe#map {
@@ -169,7 +174,7 @@
 }
 
 /* Summary info */
-#wikitldr #header section {
+#wikitldr #header > section {
   clear: left;
   padding: 1.75em 0;
   width: 440px;
@@ -217,3 +222,5 @@
 }
 
 /* Body */
+#wikitldr #body {
+}

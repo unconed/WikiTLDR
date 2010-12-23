@@ -16,7 +16,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
             '<span class="time">%published.time</span>'+
           '</h2>'+
         '</hgroup>'+
-        '<aside>'+
+        '<aside><section>'+
           '%map'+
           '<details>'+
             '<dl>'+
@@ -28,7 +28,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
               '<dd>%routed</dd>'+
             '</dl>'+
           '</details>'+
-        '</aside>'+
+        '</section></aside>'+
         '<section>'+
           '<h1>%title</h1>'+
           '<dl>'+
@@ -190,6 +190,9 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     var c = $elements.filter(':eq(3)').html();
     c = c.split(/\/\//).join(" / ");
     metadata.classification = c;
+    
+    // Process reference.
+    metadata.reference = metadata.reference.replace(/([0-9]+)([A-Z]+)([0-9]+)(?=<)/g, function (x,a,b,c) { return a+'-'+b+'-'+c; })
   }
 
   /**
@@ -239,8 +242,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
         // Remove extension-like numbers.
         metadata[i] = metadata[i]
           .replace(/(^\b)[A-Z0-9]+\/(?=[A-Z])/mg, '')
-          .replace(/( (PRIORITY))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' (<span class="priority" title="Priority"> ! </span>)' : '' })
-          .replace(/( (IMMEDIATE))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' (<span class="immediate" title="Immediate"> ! </span>)' : '' });
+          .replace(/( (PRIORITY))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' <span class="priority" title="Priority">( ! )</span>' : '' })
+          .replace(/( (IMMEDIATE))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' <span class="immediate" title="Immediate">( ‼ )</span>' : '' });
 
         // Wrap recipients in spans.  
         metadata[i] = '<span>'+ metadata[i].split(/\n/).join('</span> <span>') +'</span>';
@@ -304,7 +307,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     // Process words.
     var words = text.replace(/\n/g, ' ').split(/ /);
     for (i = words.length - 1; i >= 0; i--) {
-      words[i] = words[i].replace(/((^|-)["'’.,()]*)([A-Z"'’.,()]+)((?=-)|$)/g, function (m, pre, n, text) { return pre + text.substring(0,1) + text.substring(1).toLowerCase(); });
+      words[i] = words[i].replace(/((^|-)["'’.,()]*)([A-Z"'’.,():]+)((?=-)|$)/g, function (m, pre, n, text) { return pre + text.substring(0,1) + text.substring(1).toLowerCase(); });
     }
     text = words.join(' ');
     
