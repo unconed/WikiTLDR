@@ -1,6 +1,6 @@
 /// Data sets.
 
-var uppercaseFix = /\b(US(NORTH|SOUTH)(COM)?|UK|DC|EU|USA|USEU|USINT|U\.S\.|[IVXLDCM]+)\b/ig;
+var uppercaseFix = /\b(US(NORTH|SOUTH|EU)(COM)?|UK|DC|EU|USA|HQ|USINT|U\.S\.|[IVXLDCM]+)\b/ig;
 
 var miscTags = {
   'AMEMBASSY':'American Embassy',

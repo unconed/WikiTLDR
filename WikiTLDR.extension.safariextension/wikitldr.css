@@ -1,3 +1,9 @@
+div.big.pane {
+  padding-left: 20px;
+  width: 800px;
+  margin-right: -50px;
+}
+
 /* CSS reset re: wikileaks */
 #wikitldr h1, #wikitldr h2, #wikitldr span, #wikitldr a {
   color: inherit;
@@ -54,8 +60,9 @@
 
 /* Timestamp */
 #wikitldr #header hgroup h2.time {
-  padding: 10px;
-  height: 28px;
+  padding: 8px 10px;
+  width: 160px;
+  height: 32px;
 }
 
 #wikitldr #header hgroup h2.time span {
@@ -66,21 +73,21 @@
 #wikitldr #header hgroup h2.time span.year {
   float: right;
   font-size: 32px;
-  line-height: 28px;
+  line-height: 32px;
 }
 
 #wikitldr #header hgroup h2.time span.monthday, #wikitldr #header hgroup h2.time span.time {
   float: left;
   clear: left;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 16px;
 }
 
 #wikitldr #header hgroup h2.time span.time {
   font-weight: normal;
-  font-size: 12px;
-  line-height: 12px;
-  color: #ddd;
+  font-size: 13px;
+  line-height: 22px;
+  color: #eee;
 }
 
 /* Classification */
@@ -131,6 +138,7 @@
   font-size: 14px;
   color: #555;
   overflow: visible;
+  margin-left: 20px;
 }
 
 #wikitldr #header aside section {
@@ -167,17 +175,25 @@
   margin-right: 10px;
 }
 
+#wikitldr #header aside section dd:nth-of-type(3) {
+  line-height: 14px;
+  padding-top: 7px;
+}
+
+
 #wikitldr #header aside section dd span {
   font-weight: normal;
   font-size: 12px;
-  white-space: nowrap;
+  line-height: 14px;
+  margin-bottom: 7px;
+  display: inline-block;
 }
 
 /* Summary info */
 #wikitldr #header > section {
   clear: left;
-  padding: 1.75em 0 0 10px;
-  width: 430px;
+  padding: 1.75em 0 1.75em 10px;
+  width: 480px;
 }
 
 #wikitldr #header section dl {
@@ -234,7 +250,35 @@
 #wikitldr #body h2 {
   margin: 3em 0 1.5em;
 }
+
 #wikitldr #body p {
   margin: 1.5em 0;
   text-indent: 0;
+}
+
+#wikitldr #body span.redacted {
+  background: rgba(0, 0, 0, .25);
+  color: rgba(0,0,0,0);
+}
+
+#wikitldr #body p.secret,
+#wikitldr #body p.confidential,
+#wikitldr #body p.sensitive {
+  padding: 1em 1.75em;
+  margin: -1em -1.75em;
+}
+
+#wikitldr #body p.secret {
+  background: rgba(221, 15, 45, 0.1);
+  border-left: 3px solid rgba(200, 0, 0, 0.4);
+}
+
+#wikitldr #body p.confidential {
+  background: rgba(255, 180, 25, 0.15);
+  border-left: 3px solid rgba(240, 200, 0, 0.4);
+}
+
+#wikitldr #body p.sensitive {
+  background: rgba(102, 153, 221, 0.15);
+  border-left: 3px solid rgba(50, 150, 200, 0.4);
 }

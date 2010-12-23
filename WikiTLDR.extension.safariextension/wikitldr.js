@@ -263,8 +263,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     // Matching rules for identifying data.
     var rules = [
 //      [ /^[A-Z]+: (((?!\s+\n)[^\n]+\n)+)/m, { 1: 'title' } ],
-      [ /^SUBJECT: ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{50,}\n)*([^\n]+\n))/m, { 1: 'title' } ],
-      [ /^TAGS:? ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{50,}\n)*([^\n]+\n))/m, { 1: 'tags' } ],
+      [ /^SUBJECT: ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{30,}\n)*([^\n]+\n))/m, { 1: 'title' } ],
+      [ /^TAGS:? ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{30,}\n)*([^\n]+\n))/m, { 1: 'tags' } ],
     ];
     
     // Apply matching rules to body text.
@@ -357,14 +357,48 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     
     var text = $element.html();
 
+    console.log(text);
+
     var rules = [
-      [ /^SUBJECT: ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{50,}\n)*([^\n]+\n))/m, '' ],
-      [ /^TAGS:? ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{50,}\n)*([^\n]+\n))/m, '' ],
-      [ /^(C O N F I D E N T I A L|S E C R E T)( SECTION [0-9]+ OF [0-9]+)? [A-Z]+ [0-9]+\s*$/m, '' ],
+      // Redacted information.
+      [ /X{3,}/g, function (x) { return '<span class="redacted">'+ x +'</span>'; } ],
+      // Subject lines (remove).
+      [ /^SUBJECT: ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{30,}\n)*([^\n]+\n))/m, '' ],
+      // Tags lines (remove).
+      [ /^TAGS:? ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{30,}\n)*([^\n]+\n))/m, '' ],
+      // Raw classification.
+      [ /^(UNCLAS|C O N F I D E N T I A L|S E C R E T)( SECTION [0-9]+ OF [0-9]+)? [A-Z ]+ [0-9]+\s*$/m, '' ],
+      // Header.
       [ /^SIPDIS\s*$/mg, '' ],
-      [ new RegExp('^([A-Za-z\"\'‘’“”.,;?(): --]+)\n[ -]{4,} *\n', 'mg'), function (m, title) { return '<h2>'+ title + '</h2>\n'; } ],
+      // ASCII-underlined titles
+      [ new RegExp('^([A-Za-z\"\'‘’“”.,;?(): --]+)(\n| +)((-{4,}) *\n*)+\n?', 'mg'), function (m, title) { return '<h2>'+ title + '</h2>\n'; } ],
+      // Left-over lines
+      [ /-{6,}/g, '' ],
+      // Blank lines at the beginning.
       [ /^\n+/, '' ],
-      [ new RegExp('^<a id="par[^>]*>¶<\/a>([^\n]+|\n(?!<)(?!\s*\n))+', 'mg'), function (m) { return '<p>' + m + '</p>'; } ],
+      // Marked paragraphs.
+      [ new RegExp('^<a id="par[^>]*>¶<\/a>([^\n]+|\n(?!<)(?!\s*\n))+', 'mg'), function (m) { return '<p>' + m + '</p>\n'; } ],
+      // Line-delimited paragraphs.
+      [ new RegExp('^(>|\n\n)?(([^\n]+|\n(?!<)(?!\s*\n))+)', 'mg'), function (m,a,b) { return (a||'') + '\n<p>' + b + '</p>'; } ],
+      // Determine paragraph classification.
+      [ /<p>(<a[^>]*>¶<\/a>\d+\. \(([A-Z\/]+)\))/g, function (m, prefix, category) {
+        var classes = [], titles = [], rules = [
+          [ /\bS\b/, 'secret', 'Secret' ],
+          [ /\bC\b/, 'confidential', 'Confidential' ],
+          [ /\bSBU\b/, 'sensitive', 'Sensitive but Unclassified' ],
+          [ /\bU\b/, 'unclassified', 'Unclassified' ],
+        ];
+        for (i in rules) {
+          var regexp = rules[i][0]
+            , classname = rules[i][1]
+            , title = rules[i][2];
+          if (regexp.test(category)) {
+            classes.push(classname);
+            titles.push(title);
+          }
+        }
+        return '<p class="'+ classes.join(' ') +'" title="'+ titles.join(', ') +'">'+ prefix;
+      } ],
     ];
     
     for (i in rules) {

@@ -5,11 +5,11 @@
  [X] acronym expansion
  [X] parse out classification, subject, tags, refs
  [X] maps for origin
- [.] reformat text into flowed, parse out headlines, titlecase
- [ ] classification color by section
+ [X] reformat text into flowed, parse out headlines, titlecase
+ [X] classification color by section
 [X] make design
 [X] add css
-[.] make ruleset
+[X] make ruleset
 
 
  safari-extension://net.acko.wikitldr-SCYWYCWWTN/cebfd012/map.html#Brasilia
