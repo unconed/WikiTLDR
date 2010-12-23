@@ -32,7 +32,7 @@
 		</dict>
 		<key>Whitelist</key>
 		<array>
-			<string>http://wikileaks.ch/*</string>
+			<string>http://wikileaks.ch/cable/*</string>
 		</array>
 	</dict>
 	<key>Description</key>
@@ -43,8 +43,12 @@
 	<dict>
 		<key>Website Access</key>
 		<dict>
+			<key>Allowed Domains</key>
+			<array>
+				<string>wikileaks.ch</string>
+			</array>
 			<key>Level</key>
-			<string>All</string>
+			<string>Some</string>
 		</dict>
 	</dict>
 	<key>Website</key>

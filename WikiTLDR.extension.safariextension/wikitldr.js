@@ -3,37 +3,42 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
 
   // HTML template with %placeholders / @placeholders.
   var pageTemplate = 
+    '<button>View original</button>'+
     '<div id="wikitldr">'+
       '<div id="note">%note</div>'+
       '<div id="header">'+
         '<hgroup>'+
           '<h2 class="classification @classification"><span>%classification</span></h2>'+
-          '<h2 class="time">'+
-            '<span class="year">%publishedYear</span>'+
-            '<span class="monthday">%publishedMonth %publishedDay</span>'+
-            '<span class="time">%publishedTime</span>'+
-          '</h2>'+
           '<h2 class="reference"><span>%reference</span></h2>'+
+          '<h2 class="time">'+
+            '<span class="year">%published.year</span>'+
+            '<span class="monthday">%published.month %published.day</span>'+
+            '<span class="time">%published.time</span>'+
+          '</h2>'+
         '</hgroup>'+
         '<aside>'+
           '%map'+
+          '<details>'+
+            '<dl>'+
+              '<dt>Origin</dt>'+
+              '<dd>%origin</dd>'+
+              '<dt>Released</dt>'+
+              '<dd>%released.month %released.day, %released.year - %released.time</dd>'+
+              '<dt>CC</dt>'+
+              '<dd>%routed</dd>'+
+            '</dl>'+
+          '</details>'+
         '</aside>'+
         '<section>'+
+          '<h1>%title</h1>'+
           '<dl>'+
             '<dt>From</dt>'+
             '<dd>%from</dd>'+
             '<dt>To</dt>'+
             '<dd>%to</dd>'+
-            '<dt>CC</dt>'+
-            '<dd>%routed</dd>'+
+            '<dt class="tags">Tags</dt>'+
+            '<dd class="tags">%tags</dd>'+
           '</dl>'+
-          '<h1>%title</h1>'+
-          '<details>'+
-            '<button>More info</button>'+
-            '<time>Released on: %released</time>'+
-            '<address>%id</address>'+
-          '</details>'+
-          '<details>%tags</details>'+
         '</section>'+
       '</div>'+
       '<div id="body">'+
@@ -66,14 +71,12 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     expandAcronyms(metadata, [
       miscTags,
       subjectTags,
-//      countryTags,
       programTags,
       organizationTags,
     ]);
 
     // Make a map based on the source.
     metadata.map = makeMap($(metadata.origin).text());
-    console.log(metadata.map);
 
     // Insert metadata into template.
     for (key in metadata) {
@@ -84,9 +87,14 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       }
       
       // Transform into HTML.
-      var $fragment = $('<div>'+ replace +'</div>'), $text = $fragment;
-      while ($text.children().length) { $text = $text.find('> :eq(0)'); };
-      $text.text(makeTitleCase($text.text()));
+      var $fragment = $('<div>'+ replace +'</div>'), $text = $fragment.add($fragment.find('*'));
+      $text.each(function () {
+        $.each(this.childNodes, function () {
+          if (this.nodeType == 3) {
+            this.textContent = makeTitleCase(this.textContent);
+          }
+        });
+      });
       
       // Fill in placeholders (HTML and IDs/Classes).
       pageTemplate = pageTemplate.replace(new RegExp('%'+ key, 'g'), $fragment.html());
@@ -96,27 +104,48 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     // Output template.
     $('table.cable').before(pageTemplate);
 
+    // Insert body text.
+    $('#wikitldr #body').html($body.parent().html());
+
     // Hide empty elements.
     if (!metadata.note) {
       $('#note').hide();
     }
 
-//    $('table.cable').hide();
-//    $('code').hide();
+    // Bind toggle button.
+    function on() {
+      $('table.cable').hide();
+      $('code').hide();
+      $('#wikitldr').show();
+      $('button').html('View Original');
+    }
+    function off() {
+      $('table.cable').show();
+      $('code').show();
+      $('#wikitldr').hide();
+      $('button').html('View TLDR');
+    }
+    $('button').toggle(off, on);
+
+    // Show TLDR version.
+    on();
   });
   
   /**
    * Create a map for the given location.
    */
   function makeMap(location) {
-    var $iframe = $('<iframe></iframe>');
+    
+    // Optimize common queries.
+    location = location.replace(/^Embassy /, '');
+    
+    // Output iframe.
+    var $iframe = $('<iframe id="map">');
     $iframe.css({
       border: 0,
       margin: 0,
       padding: 0,
     }).attr('src', safari.extension.baseURI + 'map.html#' + escape(location));
-    
-    console.log(safari.extension.baseURI + 'map.html#' + escape(location));
     
     return $('<div>').append($iframe).html();
   }
@@ -136,31 +165,50 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
    * Parse Wikileaks info table.
    */
   function parseTable($elements, metadata) {
+    var date;
     
     // Straight up fields.
     metadata.reference      = $elements.filter(':eq(0)').html();
-    metadata.released       = $elements.filter(':eq(2)').html();
     metadata.from           =
     metadata.origin         = $elements.filter(':eq(4)').html();
 
-    // Parse date.
-    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul',
-    'Aug','Sep','Oct','Nov','Dec'];
-    var date = $elements.filter(':eq(1)').html();
-    date.replace(/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+)/,
-        function (m, year, month, day, hours, minutes) {
-          month = months[parseInt(month, 10)];
-          metadata.publishedYear = year;
-          metadata.publishedMonth = month;
-          metadata.publishedDay = day;
-          metadata.publishedTime = hours +':'+ minutes;
-        }
-      );
+    // Parse creation date.
+    date = $elements.filter(':eq(1)').html();
+    var published = parseDate(date);
+    for (i in published) {
+      metadata['published.'+ i] = published[i];
+    }
+  
+    // Parse release date.
+    date = $elements.filter(':eq(2)').html();
+    var released = parseDate(date);
+    for (i in released) {
+      metadata['released.'+ i] = released[i];
+    }
     
     // Parse classification.
     var c = $elements.filter(':eq(3)').html();
     c = c.split(/\/\//).join(" / ");
     metadata.classification = c;
+  }
+
+  /**
+   * Parse a date.
+   */
+  function parseDate(text) {
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul',
+    'Aug','Sep','Oct','Nov','Dec'];
+    var object = {};
+    text.replace(/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+)/,
+        function (m, year, month, day, hours, minutes) {
+          month = months[parseInt(month, 10) - 1];
+          object.year = year;
+          object.month = month;
+          object.day = day;
+          object.time = hours +':'+ minutes;
+        }
+      );
+    return object;
   }
 
   /**
@@ -188,9 +236,14 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     for (i in keys) {
       i = keys[i];
       if (metadata[i]) {
+        // Remove extension-like numbers.
         metadata[i] = metadata[i]
           .replace(/(^\b)[A-Z0-9]+\/(?=[A-Z])/mg, '')
-          .replace(/ (IMMEDIATE )?[0-9]{3,5}$/mg, '');
+          .replace(/( (PRIORITY))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' (<span class="priority" title="Priority"> ! </span>)' : '' })
+          .replace(/( (IMMEDIATE))?( [0-9]{3,5})?$/mg, function (m, prior) { return prior ? ' (<span class="immediate" title="Immediate"> ! </span>)' : '' });
+
+        // Wrap recipients in spans.  
+        metadata[i] = '<span>'+ metadata[i].split(/\n/).join('</span> <span>') +'</span>';
       }
     }
   }
@@ -206,12 +259,25 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     // Matching rules for identifying data.
     var rules = [
 //      [ /^[A-Z]+: (((?!\s+\n)[^\n]+\n)+)/m, { 1: 'title' } ],
-      [ /^SUBJECT: (((?!\s+\n|[A-Z][a-z])[^\n]+\n)+)/m, { 1: 'title' } ],
+      [ /^SUBJECT: (((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]+\n)+)/m, { 1: 'title' } ],
       [ /^TAGS:? (((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]+\n)+)/m, { 1: 'tags' } ],
     ];
     
     // Apply matching rules to body text.
     applyRules(text, rules, metadata);
+    
+    // Reformat tags.
+    if (metadata.tags) {
+      
+      // Wrap tags in spans.
+      metadata.tags = '<span>'+ metadata.tags.split(/[ ,]+/).join('</span> <span>') +'</span>';
+
+      // Expand country codes.
+      metadata.tags = expandAcronyms(metadata.tags, [
+        countryTags,
+      ]);
+      
+    }
     
   }
   
@@ -235,11 +301,17 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
    * Make text titlecase.
    */
   function makeTitleCase(text) {
+    // Process words.
     var words = text.replace(/\n/g, ' ').split(/ /);
     for (i = words.length - 1; i >= 0; i--) {
-      words[i] = words[i].replace(/^(["'.,()-]*)([A-Z"'.,()-]+)$/, function (m, pre, text) { return pre + text.substring(0,1) + text.substring(1).toLowerCase(); });
+      words[i] = words[i].replace(/((^|-)["'’.,()]*)([A-Z"'’.,()]+)((?=-)|$)/g, function (m, pre, n, text) { return pre + text.substring(0,1) + text.substring(1).toLowerCase(); });
     }
-    return words.join(' ');
+    text = words.join(' ');
+    
+    // Patch up common errors.
+    text = text.replace(uppercaseFix, function (s) { return s.toUpperCase(); })
+
+    return text;
   }
   
   /**
@@ -259,12 +331,18 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       }
     })(tags[j]);
     
+    // Regexp callback.
+    function callback(m, tag) {
+      return map[tag];
+    }
+    
     // Apply replacements to obj.
     var regexp = new RegExp('(' + string + ')', 'g');
+    if (typeof obj == 'string') {
+      return obj.replace(regexp, callback);
+    }
     for (i in obj) {
-      obj[i] = obj[i].replace(regexp, function (m, tag) {
-        return map[tag];
-      });
+      obj[i] = obj[i].replace(regexp, callback);
     }
   }
   
