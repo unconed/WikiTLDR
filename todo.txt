@@ -10,5 +10,11 @@
 [X] make design
 [X] add css
 [X] make ruleset
-[ ] port to chrome
+[X] port to chrome
 
+fix tags / subject parser for:
+http://wikileaks.ch/cable/2008/01/08HAVANA103.html
+http://wikileaks.ch/cable/2009/07/09PARIS1039.html
+
+remove intermedia 2 of 3:
+http://wikileaks.ch/cable/2009/07/09PARIS1039.html

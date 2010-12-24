@@ -1,11 +1,17 @@
 {
   "name": "Wiki TL;DR",
-  "version": "0.1",
+  "version": "0.2",
   "description": "Reformats WikiLeaks cables for optimal reading.",
   "content_scripts": [
     {
-      "matches": ["http://wikileaks.ch/cable/*"],
-      "js": ["jquery.js", "wikitldr.js"]
+      "matches": ["http://wikileaks.ch/cable/*", "http://213.251.145.96/cable/*"],
+      "js": ["jquery-1.4.4.min.js","chrome.js", "datasets.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["http://wikileaks.ch/cable/*", "http://213.251.145.96/cable/*"],
+      "js": ["wikitldr.js"],
+      "run_at": "document_end"
     }
-  ],
+  ]
 }

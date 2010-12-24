@@ -269,16 +269,16 @@ div.big.pane {
 }
 
 #wikitldr #body p.secret {
-  background: rgba(221, 15, 45, 0.1);
+  background: rgba(221, 15, 45, 0.08);
   border-left: 3px solid rgba(200, 0, 0, 0.4);
 }
 
 #wikitldr #body p.confidential {
-  background: rgba(255, 180, 25, 0.15);
+  background: rgba(255, 180, 25, 0.12);
   border-left: 3px solid rgba(240, 200, 0, 0.4);
 }
 
 #wikitldr #body p.sensitive {
-  background: rgba(102, 153, 221, 0.15);
+  background: rgba(102, 153, 221, 0.12);
   border-left: 3px solid rgba(50, 150, 200, 0.4);
 }

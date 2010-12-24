@@ -48,7 +48,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
   // Inject stylesheet here as last, rather than in the extension, to ensure CSS priority.
   var link = document.createElement('link');
   link.setAttribute('rel', 'stylesheet');
-  link.setAttribute('href', safari.extension.baseURI + 'wikitldr.css');
+  link.setAttribute('href', wikiTLDR.getURL('wikitldr.css'));
   document.getElementsByTagName('head')[0].appendChild(link);
 
   // Manipulate content on ready.
@@ -146,7 +146,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       border: 0,
       margin: 0,
       padding: 0,
-    }).attr('src', safari.extension.baseURI + 'map.html#' + escape(location));
+    }).attr('src', wikiTLDR.getURL('map.html') + '#' + escape(location));
     
     return $('<div>').append($iframe).html();
   }
@@ -232,7 +232,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       [ /^INFO (([^\n\/]+\/[^\n]+(\n|$))+)/m, { 1: 'routed' } ],
     ];
 
-    // Apply matching rules to body text.
+    // Apply matching rules to header text.
     applyRules(text, rules, metadata);
     
     // Clean up routing records.
@@ -263,8 +263,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     // Matching rules for identifying data.
     var rules = [
 //      [ /^[A-Z]+: (((?!\s+\n)[^\n]+\n)+)/m, { 1: 'title' } ],
-      [ /^SUBJECT: ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{30,}\n)*([^\n]+\n))/m, { 1: 'title' } ],
-      [ /^TAGS:? ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{30,}\n)*([^\n]+\n))/m, { 1: 'tags' } ],
+      [ /^SUBJECT: (((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]+\n))/m, { 1: 'title' } ],
+      [ /^TAGS:? (((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]+\n))/m, { 1: 'tags' } ],
     ];
     
     // Apply matching rules to body text.
@@ -357,8 +357,6 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     
     var text = $element.html();
 
-    console.log(text);
-
     var rules = [
       // Redacted information.
       [ /X{3,}/g, function (x) { return '<span class="redacted">'+ x +'</span>'; } ],
@@ -368,6 +366,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       [ /^TAGS:? ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{30,}\n)*([^\n]+\n))/m, '' ],
       // Raw classification.
       [ /^(UNCLAS|C O N F I D E N T I A L|S E C R E T)( SECTION [0-9]+ OF [0-9]+)? [A-Z ]+ [0-9]+\s*$/m, '' ],
+      // Continued cable
+      [ /\n\n([A-Z]+ )+([0-9]+ [0-9]+ OF [0-9]+) *\n\n/mg, '' ],
       // Header.
       [ /^SIPDIS\s*$/mg, '' ],
       // ASCII-underlined titles
@@ -406,7 +406,6 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
         , replace = rules[i][1];
         text = text.replace(regexp, replace);
     }
-    console.log(text);
     
     return text;
   }
@@ -414,7 +413,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
   // Inject analytics to track extension usage.
   var script = document.createElement('script');
   script.setAttribute('type', 'text/javascript');
-  script.setAttribute('src', safari.extension.baseURI + 'analytics.js');
+  script.setAttribute('src', wikiTLDR.getURL('analytics.js'));
   document.getElementsByTagName('head')[0].appendChild(script);
   
 }

@@ -11,9 +11,9 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1</string>
+	<string>0.2</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>Chrome</key>
 	<dict/>
 	<key>Content</key>
@@ -22,17 +22,19 @@
 		<dict>
 			<key>End</key>
 			<array>
-				<string>datasets.js</string>
 				<string>wikitldr.js</string>
 			</array>
 			<key>Start</key>
 			<array>
 				<string>jquery-1.4.4.min.js</string>
+				<string>safari.js</string>
+				<string>datasets.js</string>
 			</array>
 		</dict>
 		<key>Whitelist</key>
 		<array>
 			<string>http://wikileaks.ch/cable/*</string>
+			<string>http://213.251.145.96/cable/*</string>
 		</array>
 	</dict>
 	<key>Description</key>
@@ -46,6 +48,7 @@
 			<key>Allowed Domains</key>
 			<array>
 				<string>wikileaks.ch</string>
+				<string>213.251.145.96</string>
 			</array>
 			<key>Level</key>
 			<string>Some</string>
