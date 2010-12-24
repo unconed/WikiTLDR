@@ -1,0 +1,11 @@
+{
+  "name": "Wiki TL;DR",
+  "version": "0.1",
+  "description": "Reformats WikiLeaks cables for optimal reading.",
+  "content_scripts": [
+    {
+      "matches": ["http://wikileaks.ch/cable/*"],
+      "js": ["jquery.js", "wikitldr.js"]
+    }
+  ],
+}
