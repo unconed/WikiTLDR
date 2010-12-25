@@ -389,6 +389,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       [ /^SUBJECT: (((?!\s+\n|[A-Z][a-z]|(REF|TAGS):?)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|(REF|TAGS):?)[^\n]+\n))/m, '' ],
       // Tags lines (remove).
       [ /^TAGS:? (((?!\s+\n|[A-Z][a-z]|(REF|SUBJECT):)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|(REF|SUBJECT):?)[^\n]+\n))/m, '' ],
+      // Declassification date (remove).
+      [ /^E\.O\. [0-9]+: DECL: ([^\n]+)\n/m, '' ],
       // Raw classification.
       [ /^(UNCLAS|C O N F I D E N T I A L|S E C R E T)( SECTION [0-9]+(\.[0-9]+)? OF [0-9]+)? [A-Z ]+ [0-9]+\s*$/m, '' ],
       // Continued cable
