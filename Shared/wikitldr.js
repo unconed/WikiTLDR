@@ -34,12 +34,12 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
         '<section>'+
           '<h1>%title</h1>'+
           '<dl>'+
-            '<dt>From</dt>'+
-            '<dd>%from</dd>'+
-            '<dt>To</dt>'+
-            '<dd>%to</dd>'+
-            '<dt class="tags">Tags</dt>'+
-            '<dd class="tags">%tags</dd>'+
+            '<dt style="!from">From</dt>'+
+            '<dd style="!from">%from</dd>'+
+            '<dt style="!to">To</dt>'+
+            '<dd style="!to">%to</dd>'+
+            '<dt style="!tags" class="tags">Tags</dt>'+
+            '<dd style="!tags" class="tags">%tags</dd>'+
           '</dl>'+
         '</section>'+
       '</div>'+
@@ -208,7 +208,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul',
     'Aug','Sep','Oct','Nov','Dec'];
     var object = {};
-    text.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/,
+    text.replace(/([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})/,
         function (m, month, day, year) {
           month = months[parseInt(month, 10) - 1];
           object.year = year;
