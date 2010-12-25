@@ -286,13 +286,11 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     
     // Reformat declassified.
     if (metadata.declassified) {
-      console.log(metadata);
       var date = parseDate(metadata.declassified);
       for (i in date) {
         metadata['declassified.' + i] = date[i];
       }      
       delete metadata.declassified;
-      console.log(metadata);
     }
     
     // Reformat tags.
