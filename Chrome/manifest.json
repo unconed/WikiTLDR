@@ -1,6 +1,6 @@
 {
   "name": "Wiki TL;DR",
-  "version": "0.2",
+  "version": "0.3",
   "description": "Reformats WikiLeaks cables for optimal reading.",
   "content_scripts": [
     {
