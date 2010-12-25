@@ -250,6 +250,7 @@ div.big.pane {
 
 /* Body */
 #wikitldr #body {
+  clear: both;
   padding: 0 10px;
 }
 

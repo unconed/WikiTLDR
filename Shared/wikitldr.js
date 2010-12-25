@@ -24,8 +24,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
               '<dd>%origin</dd>'+
               '<dt>Released</dt>'+
               '<dd>%released.month %released.day, %released.year - %released.time</dd>'+
-              '<dt>CC</dt>'+
-              '<dd>%routed</dd>'+
+              '<dt style="!routed">CC</dt>'+
+              '<dd style="!routed">%routed</dd>'+
               '<dt style="!declassified">Declassified</dt>'+
               '<dd style="!declassified">%declassified.month %declassified.day, %declassified.year</dd>'+
             '</dl>'+
