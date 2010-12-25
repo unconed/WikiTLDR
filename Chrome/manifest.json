@@ -1,6 +1,6 @@
 {
   "name": "Wiki TL;DR",
-  "version": "0.3",
+  "version": "0.3.1",
   "description": "Reformats WikiLeaks cables for optimal reading.",
   "update_url": "https://github.com/unconed/WikiTLDR/raw/master/Update/updates.xml",
   "content_scripts": [
