@@ -8,6 +8,8 @@
 <script type="text/javascript">
   var geocoder;
   var map;
+  
+  // Initialize simple map widget.
   function initialize() {
     geocoder = new google.maps.Geocoder();
     var latlng = new google.maps.LatLng(0, 0);
@@ -25,6 +27,7 @@
     codeAddress();
   }
 
+  // Geocode based on the #fragment in the URL.
   function codeAddress() {
     var address = unescape(location.hash).substring(1);
     geocoder.geocode( { 'address': address}, function(results, status) {

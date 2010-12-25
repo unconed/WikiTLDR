@@ -5,6 +5,7 @@ var uppercaseFix = /\b(US(NORTH|SOUTH|EU)(COM)?|UK|DC|EU|USA|HQ|USINT|U\.S\.|[IV
 var miscTags = {
   'AMEMBASSY':'American Embassy',
   'AMCONSUL':'American Consulate',
+  'NOFORN':'No Foreign',
   'SECSTATE':'Secretary of State',
   'WASHDC':'Washington DC',
 };

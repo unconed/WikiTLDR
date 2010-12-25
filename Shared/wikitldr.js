@@ -86,11 +86,13 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
         replace = '<em>n/a</em>';
       }
       
-      // Transform into HTML.
+      // Transform HTML into DOM.
       var $fragment = $('<div>'+ replace +'</div>'), $text = $fragment.add($fragment.find('*'));
+      // Find all text nodes so we can alter their contents.
       $text.each(function () {
         $.each(this.childNodes, function () {
           if (this.nodeType == 3) {
+            // Apply capitalization rules.
             this.textContent = makeTitleCase(this.textContent);
           }
         });
@@ -258,13 +260,13 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
   function parseBody($element, metadata) {
 
     // Pre-process header text.
-    var text = $element.text();
+    var text = $element.html().replace(/&#x000A;/, '\n');
 
     // Matching rules for identifying data.
     var rules = [
 //      [ /^[A-Z]+: (((?!\s+\n)[^\n]+\n)+)/m, { 1: 'title' } ],
-      [ /^SUBJECT: (((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]+\n))/m, { 1: 'title' } ],
-      [ /^TAGS:? (((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|[A-Z]+:)[^\n]+\n))/m, { 1: 'tags' } ],
+      [ /^SUBJECT: (((?!\s+\n|[A-Z][a-z]|(REF|TAGS):?)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|(REF|TAGS):?)[^\n]+\n))/m, { 1: 'title' } ],
+      [ /^TAGS:? (((?!\s+\n|[A-Z][a-z]|(REF|SUBJECT):?)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|(REF|SUBJECT):?)[^\n]+\n))/m, { 1: 'tags' } ],
     ];
     
     // Apply matching rules to body text.
@@ -274,7 +276,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     if (metadata.tags) {
       
       // Wrap tags in spans.
-      metadata.tags = '<span>'+ metadata.tags.split(/[ ,]+/).join('</span> <span>') +'</span>';
+      metadata.tags = '<span>'+ metadata.tags.split(/[ ,](?!href)+/).join('</span> <span>') +'</span>';
 
       // Expand country codes.
       metadata.tags = expandAcronyms(metadata.tags, [
@@ -361,17 +363,19 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       // Redacted information.
       [ /X{3,}/g, function (x) { return '<span class="redacted">'+ x +'</span>'; } ],
       // Subject lines (remove).
-      [ /^SUBJECT: ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{30,}\n)*([^\n]+\n))/m, '' ],
+      [ /^SUBJECT: (((?!\s+\n|[A-Z][a-z]|(REF|TAGS):?)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|(REF|TAGS):?)[^\n]+\n))/m, '' ],
       // Tags lines (remove).
-      [ /^TAGS:? ((?!\s+\n|[A-Z][a-z]|[A-Z]+:)([^\n]{30,}\n)*([^\n]+\n))/m, '' ],
+      [ /^TAGS:? (((?!\s+\n|[A-Z][a-z]|(REF|SUBJECT):)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|(REF|SUBJECT):?)[^\n]+\n))/m, '' ],
       // Raw classification.
-      [ /^(UNCLAS|C O N F I D E N T I A L|S E C R E T)( SECTION [0-9]+ OF [0-9]+)? [A-Z ]+ [0-9]+\s*$/m, '' ],
+      [ /^(UNCLAS|C O N F I D E N T I A L|S E C R E T)( SECTION [0-9]+(\.[0-9]+)? OF [0-9]+)? [A-Z ]+ [0-9]+\s*$/m, '' ],
       // Continued cable
-      [ /\n\n([A-Z]+ )+([0-9]+ [0-9]+ OF [0-9]+) *\n\n/mg, '' ],
+      [ /\n\n?([A-Z]+ )+([0-9]+ [0-9]+(\.[0-9]+)? OF [0-9]+) *\n\n?/mg, '' ],
       // Header.
       [ /^SIPDIS\s*$/mg, '' ],
       // ASCII-underlined titles
       [ new RegExp('^([A-Za-z\"\'‘’“”.,;?(): --]+)(\n| +)((-{4,}) *\n*)+\n?', 'mg'), function (m, title) { return '<h2>'+ title + '</h2>\n'; } ],
+      // UPPERCASE titles
+      [ new RegExp('\n\n([A-Za-z\"\'‘’“”.,;?(): --]+)\n\n', 'mg'), function (m, title) { return '<h2>'+ title + '</h2>\n'; } ],
       // Left-over lines
       [ /-{6,}/g, '' ],
       // Blank lines at the beginning.
