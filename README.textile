@@ -1,6 +1,6 @@
 *Wiki TL;DR* is an extension for Safari and Chrome. It replaces the drab data dumps of Cablegate with richly formatted pages optimized for reading.
 
-Download v0.2:
+Download v0.3:
 "Safari":https://github.com/unconed/WikiTLDR/blob/master/Build/WikiTLDR.safariextz
 "Chrome":https://github.com/unconed/WikiTLDR/blob/master/Build/WikiTLDR.crx
 
