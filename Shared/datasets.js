@@ -589,7 +589,7 @@ var organizationTags = {
 'AID':'International Cooperation Administration',
 'AIFLD':'American Institute for Free Labor Development',
 'AKB':'Allied Kommandatura Berlin',
-'AL':'Arab League',
+'AL(?![ -][Qq][Aa][Ee][Dd][Aa])':'Arab League',
 'AL-1':'Arab League',
 'ALIA':'Royal Jordanian Airline',
 'Alitalia':'Italian Airline',

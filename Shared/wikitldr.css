@@ -24,6 +24,11 @@ div.big.pane {
   font-size: 16px;
 }
 
+#wikitldr em {
+  font-style: italic;
+}
+
+/* Notifications / comments */
 #wikitldr #note {
   background: #ffb;
   padding: 0.75em;
@@ -166,8 +171,9 @@ div.big.pane {
 
 #wikitldr #header aside section dt {
   float: left;
-  width: 80px;
+  width: 85px;
   text-align: right;
+  font-size: 13px;
 }
 
 #wikitldr #header aside section dd {
@@ -206,7 +212,7 @@ div.big.pane {
   width: 80px;
   width: 50px;
   text-align: right;
-  color: rgba(0, 0, 0, .5);
+  color: rgba(0, 0, 0, .4);
 }
 
 #wikitldr #header section dd {

@@ -26,6 +26,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
               '<dd>%released.month %released.day, %released.year - %released.time</dd>'+
               '<dt>CC</dt>'+
               '<dd>%routed</dd>'+
+              '<dt style="!declassified">Declassified</dt>'+
+              '<dd style="!declassified">%declassified.month %declassified.day, %declassified.year</dd>'+
             '</dl>'+
           '</details>'+
         '</section></aside>'+
@@ -83,7 +85,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       // Get value.
       var replace = metadata[key];
       if (!replace) {
-        replace = '<em>n/a</em>';
+        replace = '';
       }
       
       // Transform HTML into DOM.
@@ -101,6 +103,7 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       // Fill in placeholders (HTML and IDs/Classes).
       pageTemplate = pageTemplate.replace(new RegExp('%'+ key, 'g'), $fragment.html());
       pageTemplate = pageTemplate.replace(new RegExp('@'+ key, 'g'), $fragment.text().toLowerCase());
+      pageTemplate = pageTemplate.replace(new RegExp('!'+ key, 'g'), 'display: '+ ($fragment.text().length ? 'block' : 'none'));
     }
     
     // Output template.
@@ -205,6 +208,14 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul',
     'Aug','Sep','Oct','Nov','Dec'];
     var object = {};
+    text.replace(/([0-9]{2})\/([0-9]{2})\/([0-9]{4})/,
+        function (m, month, day, year) {
+          month = months[parseInt(month, 10) - 1];
+          object.year = year;
+          object.month = month;
+          object.day = day;
+        }
+      );
     text.replace(/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+)/,
         function (m, year, month, day, hours, minutes) {
           month = months[parseInt(month, 10) - 1];
@@ -267,10 +278,22 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
 //      [ /^[A-Z]+: (((?!\s+\n)[^\n]+\n)+)/m, { 1: 'title' } ],
       [ /^SUBJECT: (((?!\s+\n|[A-Z][a-z]|(REF|TAGS):?)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|(REF|TAGS):?)[^\n]+\n))/m, { 1: 'title' } ],
       [ /^TAGS:? (((?!\s+\n|[A-Z][a-z]|(REF|SUBJECT):?)[^\n]{30,}\n)*((?!\s+\n|[A-Z][a-z]|(REF|SUBJECT):?)[^\n]+\n))/m, { 1: 'tags' } ],
+      [ /^E\.O\. [0-9]+: DECL: ([^\n]+)\n/m, { 1: 'declassified' } ],
     ];
     
     // Apply matching rules to body text.
     applyRules(text, rules, metadata);
+    
+    // Reformat declassified.
+    if (metadata.declassified) {
+      console.log(metadata);
+      var date = parseDate(metadata.declassified);
+      for (i in date) {
+        metadata['declassified.' + i] = date[i];
+      }      
+      delete metadata.declassified;
+      console.log(metadata);
+    }
     
     // Reformat tags.
     if (metadata.tags) {
@@ -374,8 +397,10 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       [ /^SIPDIS\s*$/mg, '' ],
       // ASCII-underlined titles
       [ new RegExp('^([A-Za-z\"\'‘’“”.,;?(): --]+)(\n| +)((-{4,}) *\n*)+\n?', 'mg'), function (m, title) { return '<h2>'+ title + '</h2>\n'; } ],
+      // Slash delimited titles
+      [ new RegExp('\n\n// ?([A-Za-z\"\'‘’“”.,;?(): \n--]+) ?//\n\n', 'mg'), function (m, title) { return '<h2>'+ title + '</h2>\n'; } ],
       // UPPERCASE titles
-      [ new RegExp('\n\n([A-Za-z\"\'‘’“”.,;?(): --]+)\n\n', 'mg'), function (m, title) { return '<h2>'+ title + '</h2>\n'; } ],
+      [ new RegExp('\n\n([A-Z\"\'‘’“”.,;?(): --]+)\n\n', 'mg'), function (m, title) { return '<h2>'+ title + '</h2>\n'; } ],
       // Left-over lines
       [ /-{6,}/g, '' ],
       // Blank lines at the beginning.
@@ -384,6 +409,8 @@ if (document.title == 'Cable Viewer' && ($('div.paginator').length == 0)) {
       [ new RegExp('^<a id="par[^>]*>¶<\/a>([^\n]+|\n(?!<)(?!\s*\n))+', 'mg'), function (m) { return '<p>' + m + '</p>\n'; } ],
       // Line-delimited paragraphs.
       [ new RegExp('^(>|\n\n)?(([^\n]+|\n(?!<)(?!\s*\n))+)', 'mg'), function (m,a,b) { return (a||'') + '\n<p>' + b + '</p>'; } ],
+      // Comments
+      [ /(COMMENT:?)((?:\n|.)+?)(END\s+COMMENT)/mg, function (m,a,b,c) { return a + '<em>' + b + '</em>' + c; } ],
       // Determine paragraph classification.
       [ /<p>(<a[^>]*>¶<\/a>\d+\. \(([A-Z\/]+)\))/g, function (m, prefix, category) {
         var classes = [], titles = [], rules = [
