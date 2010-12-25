@@ -2,6 +2,7 @@
   "name": "Wiki TL;DR",
   "version": "0.3",
   "description": "Reformats WikiLeaks cables for optimal reading.",
+  "update_url": "https://github.com/unconed/WikiTLDR/raw/master/Update/updates.xml",
   "content_scripts": [
     {
       "matches": ["http://wikileaks.ch/cable/*", "http://213.251.145.96/cable/*"],
